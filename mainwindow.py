@@ -2,10 +2,10 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import ImageTk, Image
 from board import Board
-from logimage import board_to_logimage
+from nonogram import board_to_nonogram
 import numpy as np
-from images import grayscale_img, resize_img, to_board
-from logimagewindow import create_window
+from images_processing import grayscale_img, resize_img, to_board
+from nonogramwindow import create_window
 
 imPath = "test"
 
@@ -26,27 +26,26 @@ def load_image_button_pressed():
 
 
 def validation_button_pressed():
-    global imPath, canvas_logimage, LINES_COUNT, COLUMNS_COUNT
+    global imPath, canvas_nonogram, LINES_COUNT, COLUMNS_COUNT
     LINES_COUNT = int(entry_horizontal.get())
     COLUMNS_COUNT = int(entry_vertical.get())
     board = board_from_image(imPath)
-    draw_board_in_canvas(canvas_logimage, board)
+    draw_board_in_canvas(canvas_nonogram, board)
 
 
-def logimage_visualization_button_pressed():
-    global imPath, canvas_logimage, LINES_COUNT, COLUMNS_COUNT
+def nonogram_visualization_button_pressed():
+    global imPath, canvas_nonogram, LINES_COUNT, COLUMNS_COUNT
     LINES_COUNT = int(entry_horizontal.get())
     COLUMNS_COUNT = int(entry_vertical.get())
     board = board_from_image(imPath)
-    logimage = board_to_logimage(board)
-    create_window(logimage)
+    nonogram = board_to_nonogram(board)
+    create_window(nonogram)
 
 
 def openImageFile():
     global img, image, imPath
     imPath = filedialog.askopenfilename(initialdir=".", title="Open an image", filetypes=(
         ("Image file", "*.png"), ("Image file", "*.jpeg"), ("Image file", "*.jpg"), ("All File Types", "*.*")))
-    # print("Image successfully loaded")
     if imPath:
         PILimg = Image.open(imPath)
         PILimg = PILimg.resize((200, 200))
@@ -83,10 +82,10 @@ load_image_button.pack()
 image.pack()
 
 label_entry_horizontal = tk.Label(
-    text="Entrez le nombre de lignes du logimage")
+    text="Entrez le nombre de lignes du nonogram")
 entry_horizontal = tk.Entry(root)
 label_entry_vertical = tk.Label(
-    text="Entrez le nombre de colonnes du logimage")
+    text="Entrez le nombre de colonnes du nonogram")
 entry_vertical = tk.Entry(root)
 
 label_entry_horizontal.pack()
@@ -103,21 +102,21 @@ validation_button = tk.Button(
     text="Valider", command=validation_button_pressed)
 validation_button.pack()
 
-canvas_logimage = tk.Canvas(width=202, height=202)
-canvas_logimage.pack()
+canvas_nonogram = tk.Canvas(width=202, height=202)
+canvas_nonogram.pack()
 
-logimage_visualization_button = tk.Button(
-    text="Visualiser le logimage vide", command=logimage_visualization_button_pressed
+nonogram_visualization_button = tk.Button(
+    text="Visualiser le nonogram vide", command=nonogram_visualization_button_pressed
 )
-logimage_visualization_button.pack()
+nonogram_visualization_button.pack()
 
 
 def draw_lines():
     for line_number in range(LINES_COUNT + 1):
-        canvas_logimage.create_line(
+        canvas_nonogram.create_line(
             0, line_number * 200/LINES_COUNT, 200, line_number * 200/LINES_COUNT)
     for column_number in range(COLUMNS_COUNT + 1):
-        canvas_logimage.create_line(
+        canvas_nonogram.create_line(
             column_number * 200/COLUMNS_COUNT, 0, column_number * 200/COLUMNS_COUNT, 200)
 
 

@@ -40,7 +40,7 @@ class Nonogram:
         return True
 
 
-def board_to_Nonogram(board: Board) -> Nonogram:
+def board_to_nonogram(board: Board) -> Nonogram:
     """
     Transposes a filled `Board` to the corresponding `Nonogram`.
     """
