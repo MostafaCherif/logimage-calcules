@@ -3,7 +3,7 @@ import numpy as np
 from numpy.typing import NDArray
 from typing import Tuple
 from board import Board
-import logimage
+import nonogram
 
 
 def grayscale_img(path_to_image: str) -> Image:
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     arr = np.array(img)
     board = to_board(arr, 210)
     board.draw()
-    log = logimage.board_to_logimage(board)
+    log = nonogram.board_to_nonogram(board)
     print(log.left_constraints)
     print(log.top_constraints)
     board = log.solve()
