@@ -8,6 +8,7 @@ from IPython.display import clear_output
 from itertools import combinations
 import solveur
 from threading import Thread, Event
+from nonogram import Nonogram
 
 ## Pixelisation
 
@@ -133,6 +134,7 @@ def ImgToLogimage(im):
     while COL_VALUES[-1] == []:
         COL_VALUES.pop()
 
+    # return Nonogram(ROW_VALUES, COL_VALUES)
     return (ROW_VALUES, COL_VALUES)
 
 # solveur
@@ -180,6 +182,8 @@ logimage_une_solution()
 
 n_col = len(ROW_VALUES)
 n_row = len(COL_VALUES)
+
+# n_col, n_row = NONOGRAM.height, NONOGRAM.width
 
 ROWS = [" ".join(map(str, l)) for l in ROW_VALUES]
 COLS = ["\n".join(map(str, l)) for l in COL_VALUES]

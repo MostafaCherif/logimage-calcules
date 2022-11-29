@@ -8,6 +8,7 @@ from IPython.display import clear_output
 from itertools import combinations
 import solveur
 from threading import Thread, Event
+from nonogram import Nonogram
 
 ## Pixelisation
 
@@ -135,6 +136,7 @@ def ImgToLogimage(im):
     while COL_VALUES[-1] == []:
         COL_VALUES.pop()
 
+    # return Nonogram(ROW_VALUES, COL_VALUES)
     return (ROW_VALUES, COL_VALUES)
 
 # solveur
@@ -161,16 +163,32 @@ def _solvable(r,c):
     s = solveur.NonogramSolver(r,c,"./test")
     return s.solved
 
+"""
+def solvable(nonogram):
+    s = solveur.NonogramSolver(nonogram,"./test")
+    return s.solved
+
+def _solvable(nonogram):
+    action_thread = Thread(target=solvable(nonogram))
+    action_thread.start()
+    action_thread.join(timeout=10)
+    s = solveur.NonogramSolver(nonogram,"./test")
+    return s.solved
+"""
+
 def logimage_une_solution():
     global threshold
     global ROW_VALUES
     global COL_VALUES
+    # global NONOGRAM
     if threshold < 256:
         print(threshold)
+        # if not solvable(NONOGRAM):
         if not solvable(ROW_VALUES, COL_VALUES):
             threshold = thresholdUp()[0]
             ROW_VALUES = thresholdUp()[1]
             COL_VALUES = thresholdUp()[2]
+            # NONOGRAM = Nonogram(ROW_VALUES, COL_VALUES)
             logimage_une_solution()
         else:
             print("Lesgo")
