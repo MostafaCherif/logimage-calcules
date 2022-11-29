@@ -38,6 +38,10 @@ class Board:
 
         print(total_to_print)
 
+    def is_completed(self):
+        return not(-1 in self.data)
+        
+
     def set_square(self, h_coord: int, w_coord: int, value: int) -> None:
         """
         Sets the value of the square of coordinates (`h_coord`, `w_coord`) to `value`.
