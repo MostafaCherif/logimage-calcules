@@ -4,6 +4,7 @@ from utils import check_dim, get_following_values, currently_satisfied_constrain
 from copy import deepcopy
 from tqdm import tqdm
 import numpy as np
+import solveur
 
 
 class Nonogram:
@@ -38,6 +39,20 @@ class Nonogram:
             if not(check_dim(constraint, board.data[:, i])):
                 return False
         return True
+
+
+    def solve(self):
+        """
+        Should return either the completed data (matrix of 0s and 1s / Board object) or None if there is no solution
+        """
+
+        # TODO
+        s = solveur.NonogramSolver(self.left_constraints, self.top_constraints, "./test")
+        if s.solved:
+            print("Logimage successfully solved!")
+            print("Saved at ./test")
+        else:
+            print("Zero or multiple solutions available :(")
 
 
 def board_to_nonogram(board: Board) -> Nonogram:
