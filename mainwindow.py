@@ -82,10 +82,10 @@ load_image_button.pack()
 image.pack()
 
 label_entry_horizontal = tk.Label(
-    text="Entrez le nombre de lignes du nonogram")
+    text="Entrez le nombre de lignes du logimage")
 entry_horizontal = tk.Entry(root)
 label_entry_vertical = tk.Label(
-    text="Entrez le nombre de colonnes du nonogram")
+    text="Entrez le nombre de colonnes du logimage")
 entry_vertical = tk.Entry(root)
 
 label_entry_horizontal.pack()
@@ -106,7 +106,7 @@ canvas_nonogram = tk.Canvas(width=202, height=202)
 canvas_nonogram.pack()
 
 nonogram_visualization_button = tk.Button(
-    text="Visualiser le nonogram vide", command=nonogram_visualization_button_pressed
+    text="Visualiser le logimage vide", command=nonogram_visualization_button_pressed
 )
 nonogram_visualization_button.pack()
 
