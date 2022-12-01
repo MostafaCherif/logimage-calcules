@@ -6,6 +6,7 @@ from nonogram import board_to_nonogram
 import numpy as np
 from images_processing import grayscale_img, resize_img, to_board
 from nonogramwindow import create_window
+from generateur import preprocess_image
 
 imPath = "test"
 
@@ -19,6 +20,7 @@ insert_label = tk.Label(text="Ajoutez votre image ici")
 insert_label.pack()
 
 image = tk.Label()
+nonogram = None
 
 
 def load_image_button_pressed():
@@ -26,20 +28,35 @@ def load_image_button_pressed():
 
 
 def validation_button_pressed():
-    global imPath, canvas_nonogram, LINES_COUNT, COLUMNS_COUNT
-    LINES_COUNT = int(entry_horizontal.get())
-    COLUMNS_COUNT = int(entry_vertical.get())
-    board = board_from_image(imPath)
-    draw_board_in_canvas(canvas_nonogram, board)
-
-
-def nonogram_visualization_button_pressed():
-    global imPath, canvas_nonogram, LINES_COUNT, COLUMNS_COUNT
+    global imPath, canvas_nonogram, LINES_COUNT, COLUMNS_COUNT, nonogram
     LINES_COUNT = int(entry_horizontal.get())
     COLUMNS_COUNT = int(entry_vertical.get())
     board = board_from_image(imPath)
     nonogram = board_to_nonogram(board)
+    draw_board_in_canvas(canvas_nonogram, board)
+
+
+def nonogram_visualization_button_pressed():
+    global nonogram
     create_window(nonogram)
+
+
+def unicity_button_pressed():
+    global nonogram
+    global canvas_nonogram
+    if nonogram is None:
+        tk.messagebox.showerror("Logimage manquant", "Aucun logimage à analyser !")
+        return
+    
+    try:
+        one_solution = nonogram.solve()
+    except Exception as e:
+        if "timeout" in e:
+            tk.messagebox.showwarning("Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(")
+    if one_solution:
+        tk.messagebox.showinfo("Analyse de logimage", "Le logimage admet bien une unique solution !")
+    else:
+        tk.messagebox.showwarning("Analyse de logimage", "Le logimage admet plusieurs solutions :(")
 
 
 def openImageFile():
@@ -68,11 +85,8 @@ def draw_board_in_canvas(canvas: tk.Canvas, board: Board) -> None:
 
 def board_from_image(path: str):
     global slider, LINES_COUNT, COLUMNS_COUNT
-    img = grayscale_img(path)
-    img = resize_img(img, (LINES_COUNT, COLUMNS_COUNT))
-    arr = np.array(img)
-    board = to_board(arr, 255 - slider.get())
-    return board
+    preprocessed_img = preprocess_image(path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
+    return Board(data=preprocessed_img)
 
 
 load_image_button = tk.Button(
@@ -105,6 +119,11 @@ validation_button.pack()
 canvas_nonogram = tk.Canvas(width=202, height=202)
 canvas_nonogram.pack()
 
+check_for_unicity_button = tk.Button(
+    text="Vérifier l'existence et l'unicité d'une solution", command=unicity_button_pressed
+)
+
+check_for_unicity_button.pack()
 nonogram_visualization_button = tk.Button(
     text="Visualiser le logimage vide", command=nonogram_visualization_button_pressed
 )
