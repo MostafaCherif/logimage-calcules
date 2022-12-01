@@ -53,6 +53,7 @@ class Nonogram:
             print("Saved at ./test")
         else:
             print("Zero or multiple solutions available :(")
+        return s.solved
 
 
 def board_to_nonogram(board: Board) -> Nonogram:
