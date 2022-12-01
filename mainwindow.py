@@ -6,6 +6,7 @@ from nonogram import board_to_nonogram
 import numpy as np
 from images_processing import grayscale_img, resize_img, to_board
 from nonogramwindow import create_window
+from generateur import preprocess_image
 
 imPath = "test"
 
@@ -84,11 +85,8 @@ def draw_board_in_canvas(canvas: tk.Canvas, board: Board) -> None:
 
 def board_from_image(path: str):
     global slider, LINES_COUNT, COLUMNS_COUNT
-    img = grayscale_img(path)
-    img = resize_img(img, (LINES_COUNT, COLUMNS_COUNT))
-    arr = np.array(img)
-    board = to_board(arr, 255 - slider.get())
-    return board
+    preprocessed_img = preprocess_image(path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
+    return Board(data=preprocessed_img)
 
 
 load_image_button = tk.Button(

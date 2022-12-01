@@ -1,16 +1,11 @@
-from tkinter.tix import ROW
-import cv2
-import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.image as mpimg
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
-from IPython.display import clear_output
-from itertools import combinations
 import solveur
 from threading import Thread, Event
-from nonogram import Nonogram
+from typing import Tuple
 
-def ImgToLogimage(im):
+def ImgToLogimage(im): # To rebuild, `im` is not used and `i_size` is undefined
     ROW_VALUES = []
     for row in range(i_size[1]):
         ROW_VALUES.append([])
@@ -112,6 +107,48 @@ def logimage_une_solution():
         else:
             print("Lesgo")
     print("Done")
+
+
+def preprocess_image(
+    original_image_path: str="test.jpg",
+    threshold: int=190,
+    output_size: Tuple[int, int]=(24, 24)
+):
+    """
+    Transforms the image whose path is given as argument to its black and white version relative to the threshold and the sizes.
+    Args:
+    `original_image_path`: the path of the original image (provided by the user)
+    `threshold`: the black and white threshold (from 0 to 255)
+    `output_size`: the size (in pixels) of the output image. Default is (24px, 24px)
+    """
+
+    # Open file
+
+    img_PIL = Image.open(original_image_path)
+
+    # Convert to small image
+    res=img_PIL.resize(output_size,Image.BILINEAR)
+
+    # Save output image
+    name = original_image_path[-4]
+    filename = name + f'_{output_size[0]}x{output_size[1]}.jpg'
+    res.save(filename)
+
+    enhancer = ImageEnhance.Contrast(res)
+    factor = 1.5 # increase contrast
+    im_output = enhancer.enhance(factor)
+    im_output.save(filename)
+
+    ## Convert to black, gray and white
+
+    imgmtplt = mpimg.imread(filename)
+
+    R, G, B = imgmtplt[:,:,0], imgmtplt[:,:,1], imgmtplt[:,:,2]
+    imgGray = 0.2989 * R + 0.5870 * G + 0.1140 * B
+
+    imgThreshold = imgGray < threshold # Inequality reversed because 255 is considered as white
+    return imgThreshold
+
 
 if __name__ == "__main__":
     # Aled
