@@ -36,11 +36,7 @@ def validation_button_pressed():
 
 
 def nonogram_visualization_button_pressed():
-    global imPath, canvas_nonogram, LINES_COUNT, COLUMNS_COUNT, nonogram
-    """LINES_COUNT = int(entry_horizontal.get())
-    COLUMNS_COUNT = int(entry_vertical.get())
-    board = board_from_image(imPath)
-    nonogram = board_to_nonogram(board)"""
+    global nonogram
     create_window(nonogram)
 
 
