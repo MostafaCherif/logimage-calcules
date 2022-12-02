@@ -6,7 +6,7 @@ from nonogram import board_to_nonogram
 import numpy as np
 from images_processing import grayscale_img, resize_img, to_board
 from nonogramwindow import create_window
-from generateur import preprocess_image
+import generateur
 
 imPath = "test"
 
@@ -84,8 +84,13 @@ def draw_board_in_canvas(canvas: tk.Canvas, board: Board) -> None:
 
 
 def board_from_image(path: str):
-    global slider, LINES_COUNT, COLUMNS_COUNT
-    preprocessed_img = preprocess_image(path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
+    global slider, LINES_COUNT, COLUMNS_COUNT, selectedChoice
+    preprocessed_img = None
+    if selectedChoice.get() == "NoEdgy":
+        preprocessed_img = generateur.preprocess_image(path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
+    elif selectedChoice.get() == "Edgy":
+        # TODO
+        raise NotImplementedError("TODO")
     return Board(data=preprocessed_img)
 
 
@@ -111,6 +116,12 @@ entry_vertical.pack()
 slider = tk.Scale(from_=0, to=255, tickinterval=32,
                   length=250, orient="horizontal")
 slider.pack()
+
+selectedChoice = tk.StringVar()
+rbNoEdgy = tk.Radiobutton(root, text="Image complète", variable=selectedChoice, value="NoEdgy")
+rbEdgy = tk.Radiobutton(root, text="Contours uniquement", variable=selectedChoice, value="Edgy")
+rbNoEdgy.pack(anchor="w")
+rbEdgy.pack(anchor="w")
 
 validation_button = tk.Button(
     text="Valider", command=validation_button_pressed)
