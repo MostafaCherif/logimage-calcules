@@ -103,9 +103,11 @@ image.pack()
 label_entry_horizontal = tk.Label(
     text="Entrez le nombre de lignes du logimage")
 entry_horizontal = tk.Entry(root)
+entry_horizontal.insert(0, "5")
 label_entry_vertical = tk.Label(
     text="Entrez le nombre de colonnes du logimage")
 entry_vertical = tk.Entry(root)
+entry_vertical.insert(0, "5")
 
 label_entry_horizontal.pack()
 entry_horizontal.pack()
