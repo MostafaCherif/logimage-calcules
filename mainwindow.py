@@ -7,6 +7,7 @@ import numpy as np
 from images_processing import grayscale_img, resize_img, to_board
 from nonogramwindow import create_window
 import generateur
+import generateur_edgy
 
 imPath = "test"
 
@@ -89,8 +90,7 @@ def board_from_image(path: str):
     if selectedChoice.get() == "NoEdgy":
         preprocessed_img = generateur.preprocess_image(path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
     elif selectedChoice.get() == "Edgy":
-        # TODO
-        raise NotImplementedError("TODO")
+        preprocessed_img = generateur_edgy.preprocess_image(path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
     return Board(data=preprocessed_img)
 
 
