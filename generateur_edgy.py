@@ -47,10 +47,7 @@ def preprocess_image(
 
     imgmtplt = mpimg.imread(filename)
 
-    R, G, B = imgmtplt[:,:,0], imgmtplt[:,:,1], imgmtplt[:,:,2]
-    imgGray = 0.2989 * R + 0.5870 * G + 0.1140 * B
-
-    imgThreshold = imgGray < threshold # Inequality reversed because 255 is considered as white
+    imgThreshold = imgmtplt < threshold # Inequality reversed because 255 is considered as white
     return imgThreshold
 
 
