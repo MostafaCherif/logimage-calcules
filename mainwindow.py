@@ -46,18 +46,22 @@ def unicity_button_pressed():
     global nonogram
     global canvas_nonogram
     if nonogram is None:
-        tk.messagebox.showerror("Logimage manquant", "Aucun logimage à analyser !")
+        tk.messagebox.showerror("Logimage manquant",
+                                "Aucun logimage à analyser !")
         return
-    
+
     try:
         one_solution = nonogram.solve()
     except Exception as e:
         if "timeout" in e:
-            tk.messagebox.showwarning("Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(")
+            tk.messagebox.showwarning(
+                "Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(")
     if one_solution:
-        tk.messagebox.showinfo("Analyse de logimage", "Le logimage admet bien une unique solution !")
+        tk.messagebox.showinfo("Analyse de logimage",
+                               "Le logimage admet bien une unique solution !")
     else:
-        tk.messagebox.showwarning("Analyse de logimage", "Le logimage admet plusieurs solutions :(")
+        tk.messagebox.showwarning(
+            "Analyse de logimage", "Le logimage admet plusieurs solutions :(")
 
 
 def openImageFile():
@@ -66,7 +70,7 @@ def openImageFile():
         ("Image file", "*.png"), ("Image file", "*.jpeg"), ("Image file", "*.jpg"), ("All File Types", "*.*")))
     if imPath:
         PILimg = Image.open(imPath)
-        PILimg = PILimg.resize((200, 200))
+        PILimg = resize_img(PILimg, 200)
         img = ImageTk.PhotoImage(PILimg)
         image.configure(image=img)
 
@@ -88,9 +92,11 @@ def board_from_image(path: str):
     global slider, LINES_COUNT, COLUMNS_COUNT, selectedChoice
     preprocessed_img = None
     if selectedChoice.get() == "NoEdgy":
-        preprocessed_img = generateur.preprocess_image(path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
+        preprocessed_img = generateur.preprocess_image(
+            path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
     elif selectedChoice.get() == "Edgy":
-        preprocessed_img = generateur_edgy.preprocess_image(path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
+        preprocessed_img = generateur_edgy.preprocess_image(
+            path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
     return Board(data=preprocessed_img)
 
 
@@ -120,8 +126,10 @@ slider = tk.Scale(from_=0, to=255, tickinterval=32,
 slider.pack()
 
 selectedChoice = tk.StringVar()
-rbNoEdgy = tk.Radiobutton(root, text="Image complète", variable=selectedChoice, value="NoEdgy")
-rbEdgy = tk.Radiobutton(root, text="Contours uniquement", variable=selectedChoice, value="Edgy")
+rbNoEdgy = tk.Radiobutton(root, text="Image complète",
+                          variable=selectedChoice, value="NoEdgy")
+rbEdgy = tk.Radiobutton(root, text="Contours uniquement",
+                        variable=selectedChoice, value="Edgy")
 rbNoEdgy.pack(anchor="w")
 rbEdgy.pack(anchor="w")
 
