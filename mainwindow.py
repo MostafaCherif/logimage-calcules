@@ -78,14 +78,18 @@ def openImageFile():
 def draw_board_in_canvas(canvas: tk.Canvas, board: Board) -> None:
     global LINES_COUNT, COLUMNS_COUNT
     draw_lines()
-    data = board.data.T
+    data = board.data
     for i, j in np.ndindex(data.shape):
         if data[i, j] == 1:
+            """canvas.create_rectangle(
+                i * 200/LINES_COUNT, j * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, fill="#000")"""
             canvas.create_rectangle(
-                i * 200/LINES_COUNT, j * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, fill="#000")
+                j * 200/COLUMNS_COUNT, i * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, fill="#000")
         else:
+            """canvas.create_rectangle(
+                i * 200/LINES_COUNT, j * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, fill="#fff")"""
             canvas.create_rectangle(
-                i * 200/LINES_COUNT, j * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, fill="#fff")
+                j * 200/COLUMNS_COUNT, i * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, fill="#fff")
 
 
 def board_from_image(path: str):
@@ -93,11 +97,13 @@ def board_from_image(path: str):
     preprocessed_img = None
     if selectedChoice.get() == "NoEdgy":
         preprocessed_img = generateur.preprocess_image(
-            path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
+            path, threshold=slider.get(), output_size=(COLUMNS_COUNT, LINES_COUNT))
     elif selectedChoice.get() == "Edgy":
         preprocessed_img = generateur_edgy.preprocess_image(
-            path, threshold=slider.get(), output_size=(LINES_COUNT, COLUMNS_COUNT))
-    return Board(data=preprocessed_img)
+            path, threshold=slider.get(), output_size=(COLUMNS_COUNT, LINES_COUNT))
+    b = Board(data=preprocessed_img)
+    b.draw()
+    return b
 
 
 load_image_button = tk.Button(
