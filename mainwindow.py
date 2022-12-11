@@ -13,6 +13,8 @@ imPath = "test"
 
 LINES_COUNT = 3
 COLUMNS_COUNT = 3
+IMAGE_HEIGHT = 200
+IMAGE_WIDTH = 400
 
 
 root = tk.Tk()
@@ -65,31 +67,28 @@ def unicity_button_pressed():
 
 
 def openImageFile():
-    global img, image, imPath
+    global img, image, imPath, IMAGE_HEIGHT, IMAGE_WIDTH
     imPath = filedialog.askopenfilename(initialdir=".", title="Open an image", filetypes=(
         ("Image file", "*.png"), ("Image file", "*.jpeg"), ("Image file", "*.jpg"), ("All File Types", "*.*")))
     if imPath:
         PILimg = Image.open(imPath)
         PILimg = resize_img(PILimg, 200)
         img = ImageTk.PhotoImage(PILimg)
+        IMAGE_HEIGHT, IMAGE_WIDTH = PILimg.size
         image.configure(image=img)
 
 
 def draw_board_in_canvas(canvas: tk.Canvas, board: Board) -> None:
-    global LINES_COUNT, COLUMNS_COUNT
+    global LINES_COUNT, COLUMNS_COUNT, IMAGE_HEIGHT, IMAGE_WIDTH
     draw_lines()
     data = board.data
     for i, j in np.ndindex(data.shape):
         if data[i, j] == 1:
-            """canvas.create_rectangle(
-                i * 200/LINES_COUNT, j * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, fill="#000")"""
             canvas.create_rectangle(
-                j * 200/COLUMNS_COUNT, i * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, fill="#000")
+                j * IMAGE_WIDTH/COLUMNS_COUNT, i * IMAGE_HEIGHT/LINES_COUNT, (j + 1) * IMAGE_WIDTH/COLUMNS_COUNT, (i + 1) * IMAGE_HEIGHT/LINES_COUNT, fill="#000")
         else:
-            """canvas.create_rectangle(
-                i * 200/LINES_COUNT, j * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, fill="#fff")"""
             canvas.create_rectangle(
-                j * 200/COLUMNS_COUNT, i * 200/LINES_COUNT, (j + 1) * 200/COLUMNS_COUNT, (i + 1) * 200/LINES_COUNT, fill="#fff")
+                j * IMAGE_WIDTH/COLUMNS_COUNT, i * IMAGE_HEIGHT/LINES_COUNT, (j + 1) * IMAGE_WIDTH/COLUMNS_COUNT, (i + 1) * IMAGE_HEIGHT/LINES_COUNT, fill="#fff")
 
 
 def board_from_image(path: str):
@@ -143,7 +142,7 @@ validation_button = tk.Button(
     text="Valider", command=validation_button_pressed)
 validation_button.pack()
 
-canvas_nonogram = tk.Canvas(width=202, height=202)
+canvas_nonogram = tk.Canvas(width=IMAGE_WIDTH, height=IMAGE_HEIGHT)
 canvas_nonogram.pack()
 
 check_for_unicity_button = tk.Button(
@@ -160,10 +159,10 @@ nonogram_visualization_button.pack()
 def draw_lines():
     for line_number in range(LINES_COUNT + 1):
         canvas_nonogram.create_line(
-            0, line_number * 200/LINES_COUNT, 200, line_number * 200/LINES_COUNT)
+            0, line_number * IMAGE_WIDTH/LINES_COUNT, IMAGE_HEIGHT, line_number * IMAGE_WIDTH/LINES_COUNT)
     for column_number in range(COLUMNS_COUNT + 1):
         canvas_nonogram.create_line(
-            column_number * 200/COLUMNS_COUNT, 0, column_number * 200/COLUMNS_COUNT, 200)
+            column_number * IMAGE_HEIGHT/COLUMNS_COUNT, 0, column_number * IMAGE_HEIGHT/COLUMNS_COUNT, IMAGE_WIDTH)
 
 
 root.mainloop()

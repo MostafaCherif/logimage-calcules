@@ -1,5 +1,4 @@
 from tkinter.tix import ROW
-import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.image as mpimg
@@ -11,10 +10,11 @@ from threading import Thread, Event
 from nonogram import Nonogram
 from typing import Tuple
 
+
 def preprocess_image(
-    original_image_path: str="test.jpg",
-    threshold: int=190,
-    output_size: Tuple[int, int]=(24, 24)
+    original_image_path: str = "test.jpg",
+    threshold: int = 190,
+    output_size: Tuple[int, int] = (24, 24)
 ):
     """
     Transforms the image whose path is given as argument to its black and white version relative to the threshold and the sizes.
@@ -27,13 +27,13 @@ def preprocess_image(
     # Open file
 
     img_PIL = Image.open(original_image_path)
-    
+
     im_grayscale = img_PIL.convert("L")
-    
+
     im_edge = im_grayscale.filter(ImageFilter.FIND_EDGES)
 
     # Convert to small image
-    res=im_edge.resize(output_size,Image.BILINEAR)
+    res = im_edge.resize(output_size, Image.BILINEAR)
 
     # Save output image
     name = original_image_path[-4]
@@ -41,17 +41,18 @@ def preprocess_image(
     res.save(filename)
 
     enhancer = ImageEnhance.Contrast(res)
-    factor = 1.5 # increase contrast
+    factor = 1.5  # increase contrast
     im_output = enhancer.enhance(factor)
     im_output.save(filename)
 
     imgmtplt = mpimg.imread(filename)
 
-    imgThreshold = imgmtplt < threshold # Inequality reversed because 255 is considered as white
+    # Inequality reversed because 255 is considered as white
+    imgThreshold = imgmtplt < threshold
     return imgThreshold
 
 
-def ImgToLogimage(im): # To rebuild, `im` is not used and `i_size` is undefined
+def ImgToLogimage(im):  # To rebuild, `im` is not used and `i_size` is undefined
     ROW_VALUES = []
     for row in range(i_size[1]):
         ROW_VALUES.append([])
@@ -61,7 +62,7 @@ def ImgToLogimage(im): # To rebuild, `im` is not used and `i_size` is undefined
                 if count != 0:
                     ROW_VALUES[-1].append(count)
                     count = 0
-            else :
+            else:
                 count += 1
         if count != 0:
             ROW_VALUES[-1].append(count)
@@ -76,7 +77,7 @@ def ImgToLogimage(im): # To rebuild, `im` is not used and `i_size` is undefined
                     COL_VALUES[-1].append(count)
                     count = 0
             else:
-                count+=1
+                count += 1
         if count != 0:
             COL_VALUES[-1].append(count)
 
@@ -102,26 +103,28 @@ def ImgToLogimage(im): # To rebuild, `im` is not used and `i_size` is undefined
 # solveur
 
 
-
 def thresholdUp():
     global threshold
     threshold += 1
     imgT = imgGray > threshold
     (R, C) = ImgToLogimage(imgT)
-    return (threshold,R,C)
+    return (threshold, R, C)
 
 # le logimage ainsi créé n'a pas forcément une seule solution, nous allons donc ajouter des cases jusqu'à ce que ça soit le cas
 
-def solvable(r,c):
-    s = solveur.NonogramSolver(r,c,"./test")
+
+def solvable(r, c):
+    s = solveur.NonogramSolver(r, c, "./test")
     return s.solved
 
-def _solvable(r,c):
-    action_thread = Thread(target=solvable(r,c))
+
+def _solvable(r, c):
+    action_thread = Thread(target=solvable(r, c))
     action_thread.start()
     action_thread.join(timeout=10)
-    s = solveur.NonogramSolver(r,c,"./test")
+    s = solveur.NonogramSolver(r, c, "./test")
     return s.solved
+
 
 """
 def solvable(nonogram):
@@ -134,6 +137,7 @@ def _solvable(nonogram):
     s = solveur.NonogramSolver(nonogram,"./test")
     return s.solved
 """
+
 
 def logimage_une_solution():
     global threshold
