@@ -1,4 +1,5 @@
 from tkinter.tix import ROW
+import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.image as mpimg

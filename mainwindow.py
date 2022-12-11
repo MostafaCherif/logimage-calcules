@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from PIL import ImageTk, Image
 from board import Board
 from nonogram import board_to_nonogram
@@ -14,7 +14,7 @@ imPath = "test"
 LINES_COUNT = 3
 COLUMNS_COUNT = 3
 IMAGE_HEIGHT = 200
-IMAGE_WIDTH = 400
+IMAGE_WIDTH = 800
 
 
 root = tk.Tk()
@@ -55,14 +55,14 @@ def unicity_button_pressed():
     try:
         one_solution = nonogram.solve()
     except Exception as e:
-        if "timeout" in e:
-            tk.messagebox.showwarning(
+        if "timeout" in str(e):
+            messagebox.showwarning(
                 "Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(")
     if one_solution:
-        tk.messagebox.showinfo("Analyse de logimage",
-                               "Le logimage admet bien une unique solution !")
+        messagebox.showinfo("Analyse de logimage",
+                            "Le logimage admet bien une unique solution !")
     else:
-        tk.messagebox.showwarning(
+        messagebox.showwarning(
             "Analyse de logimage", "Le logimage admet plusieurs solutions :(")
 
 
@@ -74,21 +74,30 @@ def openImageFile():
         PILimg = Image.open(imPath)
         PILimg = resize_img(PILimg, 200)
         img = ImageTk.PhotoImage(PILimg)
-        IMAGE_HEIGHT, IMAGE_WIDTH = PILimg.size
+        IMAGE_WIDTH, IMAGE_HEIGHT = PILimg.size
         image.configure(image=img)
 
 
 def draw_board_in_canvas(canvas: tk.Canvas, board: Board) -> None:
-    global LINES_COUNT, COLUMNS_COUNT, IMAGE_HEIGHT, IMAGE_WIDTH
-    draw_lines()
+    global IMAGE_HEIGHT, IMAGE_WIDTH
+    canvas.delete("all")
     data = board.data
-    for i, j in np.ndindex(data.shape):
-        if data[i, j] == 1:
+    lines_count, columns_count = board.width, board.height
+    for j, i in np.ndindex(data.shape):
+        if data[j, i] == 1:
             canvas.create_rectangle(
-                j * IMAGE_WIDTH/COLUMNS_COUNT, i * IMAGE_HEIGHT/LINES_COUNT, (j + 1) * IMAGE_WIDTH/COLUMNS_COUNT, (i + 1) * IMAGE_HEIGHT/LINES_COUNT, fill="#000")
+                i * IMAGE_WIDTH/lines_count,
+                j * IMAGE_HEIGHT/columns_count,
+                (i + 1) * IMAGE_WIDTH/lines_count,
+                (j + 1) * IMAGE_HEIGHT/columns_count,
+                fill="#000")
         else:
             canvas.create_rectangle(
-                j * IMAGE_WIDTH/COLUMNS_COUNT, i * IMAGE_HEIGHT/LINES_COUNT, (j + 1) * IMAGE_WIDTH/COLUMNS_COUNT, (i + 1) * IMAGE_HEIGHT/LINES_COUNT, fill="#fff")
+                i * IMAGE_WIDTH/lines_count,
+                j * IMAGE_HEIGHT/columns_count,
+                (i + 1) * IMAGE_WIDTH/lines_count,
+                (j + 1) * IMAGE_HEIGHT/columns_count,
+                fill="#fff")
 
 
 def board_from_image(path: str):
@@ -100,9 +109,7 @@ def board_from_image(path: str):
     elif selectedChoice.get() == "Edgy":
         preprocessed_img = generateur_edgy.preprocess_image(
             path, threshold=slider.get(), output_size=(COLUMNS_COUNT, LINES_COUNT))
-    b = Board(data=preprocessed_img)
-    b.draw()
-    return b
+    return Board(data=preprocessed_img)
 
 
 load_image_button = tk.Button(
@@ -154,15 +161,6 @@ nonogram_visualization_button = tk.Button(
     text="Visualiser le logimage vide", command=nonogram_visualization_button_pressed
 )
 nonogram_visualization_button.pack()
-
-
-def draw_lines():
-    for line_number in range(LINES_COUNT + 1):
-        canvas_nonogram.create_line(
-            0, line_number * IMAGE_WIDTH/LINES_COUNT, IMAGE_HEIGHT, line_number * IMAGE_WIDTH/LINES_COUNT)
-    for column_number in range(COLUMNS_COUNT + 1):
-        canvas_nonogram.create_line(
-            column_number * IMAGE_HEIGHT/COLUMNS_COUNT, 0, column_number * IMAGE_HEIGHT/COLUMNS_COUNT, IMAGE_WIDTH)
 
 
 root.mainloop()
