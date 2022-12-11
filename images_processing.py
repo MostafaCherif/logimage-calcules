@@ -47,7 +47,5 @@ if __name__ == "__main__":
     board = to_board(arr, 210)
     board.draw()
     log = nonogram.board_to_nonogram(board)
-    print(log.left_constraints)
-    print(log.top_constraints)
     board = log.solve()
     board.draw()
