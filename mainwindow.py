@@ -20,9 +20,9 @@ IMAGE_WIDTH = 800
 root = tk.Tk()
 
 insert_label = tk.Label(text="Ajoutez votre image ici")
-insert_label.pack()
+insert_label.pack(anchor="w")
 
-image = tk.Label()
+image = tk.Label(anchor="w")
 nonogram = None
 
 
@@ -54,16 +54,16 @@ def unicity_button_pressed():
 
     try:
         one_solution = nonogram.solve()
+        if one_solution:
+            messagebox.showinfo("Analyse de logimage",
+                                "Le logimage admet bien une unique solution !")
+        else:
+            messagebox.showwarning(
+                "Analyse de logimage", "Le logimage admet plusieurs solutions :(")
     except Exception as e:
         if "timeout" in str(e):
             messagebox.showwarning(
                 "Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(")
-    if one_solution:
-        messagebox.showinfo("Analyse de logimage",
-                            "Le logimage admet bien une unique solution !")
-    else:
-        messagebox.showwarning(
-            "Analyse de logimage", "Le logimage admet plusieurs solutions :(")
 
 
 def openImageFile():
@@ -114,9 +114,9 @@ def board_from_image(path: str):
 
 load_image_button = tk.Button(
     text="Choisissez une image...", command=load_image_button_pressed)
-load_image_button.pack()
+load_image_button.pack(anchor="w")
 
-image.pack()
+image.pack(anchor="w")
 
 label_entry_horizontal = tk.Label(
     text="Entrez le nombre de lignes du logimage")
@@ -127,15 +127,15 @@ label_entry_vertical = tk.Label(
 entry_vertical = tk.Entry(root)
 entry_vertical.insert(0, "5")
 
-label_entry_horizontal.pack()
-entry_horizontal.pack()
-label_entry_vertical.pack()
-entry_vertical.pack()
+label_entry_horizontal.pack(anchor="w")
+entry_horizontal.pack(anchor="w")
+label_entry_vertical.pack(anchor="w")
+entry_vertical.pack(anchor="w")
 
 
 slider = tk.Scale(from_=0, to=255, tickinterval=32,
                   length=250, orient="horizontal")
-slider.pack()
+slider.pack(anchor="w")
 
 selectedChoice = tk.StringVar()
 rbNoEdgy = tk.Radiobutton(root, text="Image complète",
@@ -147,20 +147,20 @@ rbEdgy.pack(anchor="w")
 
 validation_button = tk.Button(
     text="Valider", command=validation_button_pressed)
-validation_button.pack()
+validation_button.pack(anchor="w")
 
 canvas_nonogram = tk.Canvas(width=IMAGE_WIDTH, height=IMAGE_HEIGHT)
-canvas_nonogram.pack()
+canvas_nonogram.pack(anchor="w")
 
 check_for_unicity_button = tk.Button(
     text="Vérifier l'existence et l'unicité d'une solution", command=unicity_button_pressed
 )
 
-check_for_unicity_button.pack()
+check_for_unicity_button.pack(anchor="w")
 nonogram_visualization_button = tk.Button(
     text="Visualiser le logimage vide", command=nonogram_visualization_button_pressed
 )
-nonogram_visualization_button.pack()
+nonogram_visualization_button.pack(anchor="w")
 
 
 root.mainloop()
