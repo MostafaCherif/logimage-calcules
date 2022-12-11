@@ -137,7 +137,7 @@ slider = tk.Scale(from_=0, to=255, tickinterval=32,
                   length=250, orient="horizontal")
 slider.pack(anchor="w")
 
-selectedChoice = tk.StringVar()
+selectedChoice = tk.StringVar(None)
 rbNoEdgy = tk.Radiobutton(root, text="Image complète",
                           variable=selectedChoice, value="NoEdgy")
 rbEdgy = tk.Radiobutton(root, text="Contours uniquement",
