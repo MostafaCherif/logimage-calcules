@@ -89,22 +89,29 @@ class MainWindow:
     def unicity_button_pressed(self):
         if self.nonogram is None:
             tk.messagebox.showerror(
-                "Logimage manquant", "Aucun logimage à analyser !")
+                "Logimage manquant", "Aucun logimage à analyser !",
+                parent=self.root)
             return
 
         try:
             one_solution = self.nonogram.solve()
             if one_solution:
                 messagebox.showinfo(
-                    "Analyse de logimage", "Le logimage admet bien une unique solution !")
+                    "Analyse de logimage", "Le logimage admet bien une unique solution !",
+                    parent=self.root)
             else:
                 messagebox.showwarning(
-                    "Analyse de logimage", "Le logimage admet plusieurs solutions :(")
+                    "Analyse de logimage", "Le logimage admet plusieurs solutions :(",
+                    parent=self.root)
 
         except Exception as e:
             if "timeout" in str(e):
                 messagebox.showwarning(
-                    "Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(")
+                    "Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(",
+                    parent=self.root)
+            else:
+                print("Exception:")
+                print(e)
 
     def openImageFile(self):
         self.imPath = filedialog.askopenfilename(initialdir=".", title="Open an image", filetypes=(
