@@ -24,12 +24,12 @@ class MainWindow:
             command=self.load_image_button_pressed)
         self.label_entry_horizontal = tk.Label(
             text="Entrez le nombre de lignes du logimage")
-        self.entry_horizontal = tk.Entry(self.root)
-        self.entry_horizontal.insert(0, "5")
+        self.entry_lines = tk.Entry(self.root)
+        self.entry_lines.insert(0, "5")
         self.label_entry_vertical = tk.Label(
             text="Entrez le nombre de colonnes du logimage")
-        self.entry_vertical = tk.Entry(self.root)
-        self.entry_vertical.insert(0, "5")
+        self.entry_columns = tk.Entry(self.root)
+        self.entry_columns.insert(0, "5")
         self.slider = tk.Scale(
             from_=0,
             to=255,
@@ -62,9 +62,9 @@ class MainWindow:
         self.load_image_button.pack()
         self.label_image.pack()
         self.label_entry_horizontal.pack()
-        self.entry_horizontal.pack()
+        self.entry_lines.pack()
         self.label_entry_vertical.pack()
-        self.entry_vertical.pack()
+        self.entry_columns.pack()
         self.slider.pack()
         self.rbNoEdgy.pack()
         self.rbEdgy.pack()
@@ -77,8 +77,8 @@ class MainWindow:
         self.openImageFile()
 
     def validation_button_pressed(self):
-        self.lines_count = int(self.entry_horizontal.get())
-        self.columns_count = int(self.entry_vertical.get())
+        self.lines_count = int(self.entry_lines.get())
+        self.columns_count = int(self.entry_columns.get())
         board = self.board_from_image(self.imPath)
         self.nonogram = board_to_nonogram(board)
         self.draw_board_in_canvas(self.canvas_nonogram, board)
@@ -129,19 +129,19 @@ class MainWindow:
         for i, j in np.ndindex(data.shape):
             if data[i, j] == 1:
                 canvas.create_rectangle(
-                    i * 200/self.lines_count, j * 200/self.columns_count, (i + 1) * 200/self.lines_count, (j + 1) * 200/self.columns_count, fill="#000")
+                    i * 200/self.columns_count, j * 200/self.lines_count, (i + 1) * 200/self.columns_count, (j + 1) * 200/self.lines_count, fill="#000")
             else:
                 canvas.create_rectangle(
-                    i * 200/self.lines_count, j * 200/self.columns_count, (i + 1) * 200/self.lines_count, (j + 1) * 200/self.columns_count, fill="#fff")
+                    i * 200/self.columns_count, j * 200/self.lines_count, (i + 1) * 200/self.columns_count, (j + 1) * 200/self.lines_count, fill="#fff")
 
     def board_from_image(self, path: str):
         preprocessed_img = None
         if self.selectedChoice.get() == "NoEdgy":
             preprocessed_img = generateur.preprocess_image(
-                path, threshold=self.slider.get(), output_size=(self.lines_count, self.columns_count))
+                path, threshold=self.slider.get(), output_size=(self.columns_count, self.lines_count))
         elif self.selectedChoice.get() == "Edgy":
             preprocessed_img = generateur_edgy.preprocess_image(
-                path, threshold=self.slider.get(), output_size=(self.lines_count, self.columns_count))
+                path, threshold=self.slider.get(), output_size=(self.columns_count, self.lines_count))
         return Board(data=preprocessed_img)
 
     def draw_lines(self):
