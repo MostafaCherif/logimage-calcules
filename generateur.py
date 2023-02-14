@@ -5,7 +5,8 @@ import solveur
 from threading import Thread, Event
 from typing import Tuple
 
-def ImgToLogimage(im): # To rebuild, `im` is not used and `i_size` is undefined
+
+def ImgToLogimage(im):  # To rebuild, `im` is not used and `i_size` is undefined
     ROW_VALUES = []
     for row in range(i_size[1]):
         ROW_VALUES.append([])
@@ -15,7 +16,7 @@ def ImgToLogimage(im): # To rebuild, `im` is not used and `i_size` is undefined
                 if count != 0:
                     ROW_VALUES[-1].append(count)
                     count = 0
-            else :
+            else:
                 count += 1
         if count != 0:
             ROW_VALUES[-1].append(count)
@@ -30,7 +31,7 @@ def ImgToLogimage(im): # To rebuild, `im` is not used and `i_size` is undefined
                     COL_VALUES[-1].append(count)
                     count = 0
             else:
-                count+=1
+                count += 1
         if count != 0:
             COL_VALUES[-1].append(count)
 
@@ -56,26 +57,28 @@ def ImgToLogimage(im): # To rebuild, `im` is not used and `i_size` is undefined
 # solveur
 
 
-
 def thresholdUp():
     global threshold
     threshold += 1
     imgT = imgGray > threshold
     (R, C) = ImgToLogimage(imgT)
-    return (threshold,R,C)
+    return (threshold, R, C)
 
 # le logimage ainsi créé n'a pas forcément une seule solution, nous allons donc ajouter des cases jusqu'à ce que ça soit le cas
 
-def solvable(r,c):
-    s = solveur.NonogramSolver(r,c,"./test")
+
+def solvable(r, c):
+    s = solveur.NonogramSolver(r, c, "./test")
     return s.solved
 
-def _solvable(r,c):
-    action_thread = Thread(target=solvable(r,c))
+
+def _solvable(r, c):
+    action_thread = Thread(target=solvable(r, c))
     action_thread.start()
     action_thread.join(timeout=10)
-    s = solveur.NonogramSolver(r,c,"./test")
+    s = solveur.NonogramSolver(r, c, "./test")
     return s.solved
+
 
 """
 def solvable(nonogram):
@@ -89,6 +92,7 @@ def _solvable(nonogram):
     s = solveur.NonogramSolver(nonogram,"./test")
     return s.solved
 """
+
 
 def logimage_une_solution():
     global threshold
@@ -110,9 +114,9 @@ def logimage_une_solution():
 
 
 def preprocess_image(
-    original_image_path: str="test.jpg",
-    threshold: int=190,
-    output_size: Tuple[int, int]=(24, 24)
+    original_image_path: str = "test.jpg",
+    threshold: int = 190,
+    output_size: Tuple[int, int] = (24, 24)
 ):
     """
     Transforms the image whose path is given as argument to its black and white version relative to the threshold and the sizes.
@@ -127,73 +131,72 @@ def preprocess_image(
     img_PIL = Image.open(original_image_path)
 
     # Convert to small image
-    res=img_PIL.resize(output_size,Image.BILINEAR)
+    res = img_PIL.resize(output_size, Image.BILINEAR)
 
     # Save output image
     name = original_image_path[-4]
-    filename = name + f'_{output_size[0]}x{output_size[1]}.jpg'
+    filename = name + "/test/" + f'_{output_size[0]}x{output_size[1]}.jpg'
     res.save(filename)
 
     enhancer = ImageEnhance.Contrast(res)
-    factor = 1.5 # increase contrast
+    factor = 1.5  # increase contrast
     im_output = enhancer.enhance(factor)
     im_output.save(filename)
 
-    ## Convert to black, gray and white
+    # Convert to black, gray and white
 
     imgmtplt = mpimg.imread(filename)
 
-    R, G, B = imgmtplt[:,:,0], imgmtplt[:,:,1], imgmtplt[:,:,2]
+    R, G, B = imgmtplt[:, :, 0], imgmtplt[:, :, 1], imgmtplt[:, :, 2]
     imgGray = 0.2989 * R + 0.5870 * G + 0.1140 * B
 
-    imgThreshold = imgGray < threshold # Inequality reversed because 255 is considered as white
+    # Inequality reversed because 255 is considered as white
+    imgThreshold = imgGray < threshold
     return imgThreshold
 
 
 if __name__ == "__main__":
     # Aled
-    ## Pixelisation
+    # Pixelisation
 
     image = 'test.jpg'
 
-    img_PIL=Image.open(image)
-
+    img_PIL = Image.open(image)
 
     threshold = 190
-    i_size = (48,48)
+    i_size = (48, 48)
     o_size = img_PIL.size
 
-    #open file
-    img=Image.open(image)
+    # open file
+    img = Image.open(image)
 
-    #convert to small image
-    res=img.resize(i_size,Image.BILINEAR)
+    # convert to small image
+    res = img.resize(i_size, Image.BILINEAR)
 
-    ##resize to output size
+    # resize to output size
     #res=small_img.resize(img.size, Image.NEAREST)
 
-    #Save output image
+    # Save output image
     name = image[-4]
     filename = name+'_{i_size[0]}x{i_size[1]}.jpg'
     res.save(filename)
 
     enhancer = ImageEnhance.Contrast(res)
-    factor = 1.5 #increase contrast
+    factor = 1.5  # increase contrast
     im_output = enhancer.enhance(factor)
     im_output.save(filename)
 
-
-    #Display images side by side
-    plt.figure(figsize=(16,10))
-    plt.subplot(2,2,1)
+    # Display images side by side
+    plt.figure(figsize=(16, 10))
+    plt.subplot(2, 2, 1)
     plt.title('Original image', size=10)
-    plt.imshow(img)   #display image
-    plt.axis('off')   #hide axis
-    plt.subplot(2,2,2)
+    plt.imshow(img)  # display image
+    plt.axis('off')  # hide axis
+    plt.subplot(2, 2, 2)
     plt.title(f'Pixel Art {i_size[0]}x{i_size[1]}', size=10)
     plt.imshow(im_output)
     plt.axis('off')
-    #plt.show()
+    # plt.show()
 
     '''im_grayscale = im_output.convert("L")
     
@@ -206,40 +209,39 @@ if __name__ == "__main__":
 
     im_invert.save('./test/test.jpg')'''
 
-    ## Transformer l'image en nuances de gris
+    # Transformer l'image en nuances de gris
 
     imgmtplt = mpimg.imread(filename)
 
-    R, G, B = imgmtplt[:,:,0], imgmtplt[:,:,1], imgmtplt[:,:,2]
+    R, G, B = imgmtplt[:, :, 0], imgmtplt[:, :, 1], imgmtplt[:, :, 2]
     imgGray = 0.2989 * R + 0.5870 * G + 0.1140 * B
 
     '''imgGray = mpimg.imread('./test/test.jpg')'''
 
-    plt.subplot(2,2,3)
+    plt.subplot(2, 2, 3)
     plt.title(f'Pixel Art grayscale', size=10)
     plt.imshow(imgGray, cmap='gray')
     plt.axis('off')
-    #plt.show()
+    # plt.show()
 
-    ## Transformer l'image en noir et blanc avec un seuil (threshold)
+    # Transformer l'image en noir et blanc avec un seuil (threshold)
 
     imgThreshold = imgGray > threshold
 
-
-    plt.subplot(2,2,4)
+    plt.subplot(2, 2, 4)
     plt.title(f'Pixel Art black and white 180', size=10)
     plt.imshow(imgThreshold, cmap='gray')
     plt.axis('off')
     plt.show()
 
-    ## Image to nonogram list
+    # Image to nonogram list
 
     # solveur
 
-    (ROW_VALUES,COL_VALUES) = ImgToLogimage(imgThreshold)
+    (ROW_VALUES, COL_VALUES) = ImgToLogimage(imgThreshold)
     logimage_une_solution()
 
-    #en plus beau
+    # en plus beau
 
     n_col = len(ROW_VALUES)
     n_row = len(COL_VALUES)
@@ -253,14 +255,15 @@ if __name__ == "__main__":
 
     plt.rcParams["figure.figsize"] = [7.00, 3.50]
     plt.rcParams["figure.autolayout"] = True
-    fig, axs = plt.subplots(1,1)
+    fig, axs = plt.subplots(1, 1)
     axs.axis("tight")
     axs.axis("off")
-    the_table = axs.table(cellText = cell_text, rowLabels = ROWS, rowLoc = "right", colLabels = COLS, loc = 'center')
-    cellDict=the_table.get_celld()
+    the_table = axs.table(cellText=cell_text, rowLabels=ROWS,
+                          rowLoc="right", colLabels=COLS, loc='center')
+    cellDict = the_table.get_celld()
     longueurs_col = [len(e) for e in COLS]
     max_col = max(longueurs_col)
     print(max_col)
     for k in range(n_row):
-        cellDict[(0,k)].set_height(0.03*max_col)
+        cellDict[(0, k)].set_height(0.03*max_col)
     plt.show()

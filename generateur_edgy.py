@@ -37,8 +37,12 @@ def preprocess_image(
     res = im_edge.resize(output_size, Image.BILINEAR)
 
     # Save output image
+
+    # TODO: check the existence of test folder and create it if necessary
+    # and delete it at the closure of the app
+
     name = original_image_path[-4]
-    filename = name + f'_{output_size[0]}x{output_size[1]}.jpg'
+    filename = name + "/test/" + f'_{output_size[0]}x{output_size[1]}.jpg'
     res.save(filename)
 
     enhancer = ImageEnhance.Contrast(res)
