@@ -58,21 +58,31 @@ class MainWindow:
     def pack_widgets(self):
         self.insert_label.grid(row=0, column=0)
         self.load_image_button.grid(row=1, column=0)
-        self.label_image.grid(row=2, column=0, rowspan=2)
+        self.label_image.grid(row=2, column=0, rowspan=2, padx=3, pady=3)
 
         self.rbNoEdgy.grid(row=0, column=1, columnspan=2)
         self.rbEdgy.grid(row=0, column=3, columnspan=2)
-        self.label_entry_horizontal.grid(row=1, column=1)
-        self.entry_lines.grid(row=1, column=2)
-        self.label_entry_vertical.grid(row=1, column=3)
+        self.label_entry_horizontal.grid(row=1, column=1, sticky="E")
+        self.entry_lines.grid(row=1, column=2, sticky="W")
+        self.label_entry_vertical.grid(row=1, column=3, sticky="E")
         self.entry_columns.grid(row=1, column=4, sticky="W")
         self.slider.grid(row=2, column=1, columnspan=4)
-        self.validation_button.grid(row=3, column=1, columnspan=4, ipadx=5, ipady=5)
+        self.validation_button.grid(
+            row=3, column=1, columnspan=4, ipadx=5, ipady=5)
 
-        self.canvas_nonogram.grid(row=4, column=0)
+        self.canvas_nonogram.grid(row=4, column=0, padx=3, pady=3)
         self.check_for_unicity_button.grid(row=5, column=0, columnspan=2)
-        self.nonogram_visualization_button.grid(
-            row=5, column=4, columnspan=1)
+        self.nonogram_visualization_button.grid(row=5, column=4)
+
+        # Dynamic reshaping when extending the main window
+        COLWEIGHTS = [1, 1, 0, 1, 0]
+        ROW_MIN_SIZES = [25, 25, 50, 155, 205, 25]
+        for col in range(5):
+            self.root.columnconfigure(col, pad=8, weight=COLWEIGHTS[col])
+
+        for row in range(6):
+            self.root.rowconfigure(row, pad=8, weight=1,
+                                   minsize=ROW_MIN_SIZES[row])
 
     def load_image_button_pressed(self):
         self.openImageFile()
