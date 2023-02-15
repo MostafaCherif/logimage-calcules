@@ -24,11 +24,11 @@ class MainWindow:
             command=self.load_image_button_pressed)
         self.label_entry_horizontal = tk.Label(
             text="Entrez le nombre de lignes du logimage :")
-        self.entry_lines = tk.Entry(self.root)
+        self.entry_lines = tk.Entry(self.root, width=2)
         self.entry_lines.insert(0, "5")
         self.label_entry_vertical = tk.Label(
             text="Entrez le nombre de colonnes du logimage :")
-        self.entry_columns = tk.Entry(self.root)
+        self.entry_columns = tk.Entry(self.root, width=2)
         self.entry_columns.insert(0, "5")
         self.slider = tk.Scale(
             from_=0,
