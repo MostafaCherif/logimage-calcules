@@ -65,13 +65,14 @@ class MainWindow:
         self.label_entry_horizontal.grid(row=1, column=1)
         self.entry_lines.grid(row=1, column=2)
         self.label_entry_vertical.grid(row=1, column=3)
-        self.entry_columns.grid(row=1, column=4)
+        self.entry_columns.grid(row=1, column=4, sticky="W")
         self.slider.grid(row=2, column=1, columnspan=4)
-        self.validation_button.grid(row=3, column=1, columnspan=4)
+        self.validation_button.grid(row=3, column=1, columnspan=4, ipadx=5, ipady=5)
 
         self.canvas_nonogram.grid(row=4, column=0)
         self.check_for_unicity_button.grid(row=5, column=0, columnspan=2)
-        self.nonogram_visualization_button.grid(row=5, column=3, columnspan=2)
+        self.nonogram_visualization_button.grid(
+            row=5, column=4, columnspan=1)
 
     def load_image_button_pressed(self):
         self.openImageFile()
