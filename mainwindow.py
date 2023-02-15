@@ -23,11 +23,11 @@ class MainWindow:
             text="Choisissez une image...",
             command=self.load_image_button_pressed)
         self.label_entry_horizontal = tk.Label(
-            text="Entrez le nombre de lignes du logimage")
+            text="Entrez le nombre de lignes du logimage :")
         self.entry_lines = tk.Entry(self.root)
         self.entry_lines.insert(0, "5")
         self.label_entry_vertical = tk.Label(
-            text="Entrez le nombre de colonnes du logimage")
+            text="Entrez le nombre de colonnes du logimage :")
         self.entry_columns = tk.Entry(self.root)
         self.entry_columns.insert(0, "5")
         self.slider = tk.Scale(
@@ -43,7 +43,7 @@ class MainWindow:
             self.root, text="Contours uniquement", variable=self.selectedChoice, value="Edgy")
 
         self.validation_button = tk.Button(
-            text="Valider", command=self.validation_button_pressed)
+            text="Valider les paramètres du logimage", command=self.validation_button_pressed)
 
         self.canvas_nonogram = tk.Canvas(width=202, height=202)
 
