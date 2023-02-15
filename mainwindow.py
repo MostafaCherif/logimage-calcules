@@ -56,20 +56,22 @@ class MainWindow:
         )
 
     def pack_widgets(self):
-        self.insert_label.pack()
-        self.load_image_button.pack()
-        self.label_image.pack()
-        self.label_entry_horizontal.pack()
-        self.entry_lines.pack()
-        self.label_entry_vertical.pack()
-        self.entry_columns.pack()
-        self.slider.pack()
-        self.rbNoEdgy.pack()
-        self.rbEdgy.pack()
-        self.validation_button.pack()
-        self.canvas_nonogram.pack()
-        self.check_for_unicity_button.pack()
-        self.nonogram_visualization_button.pack()
+        self.insert_label.grid(row=0, column=0)
+        self.load_image_button.grid(row=1, column=0)
+        self.label_image.grid(row=2, column=0, rowspan=2)
+
+        self.rbNoEdgy.grid(row=0, column=1, columnspan=2)
+        self.rbEdgy.grid(row=0, column=3, columnspan=2)
+        self.label_entry_horizontal.grid(row=1, column=1)
+        self.entry_lines.grid(row=1, column=2)
+        self.label_entry_vertical.grid(row=1, column=3)
+        self.entry_columns.grid(row=1, column=4)
+        self.slider.grid(row=2, column=1, columnspan=4)
+        self.validation_button.grid(row=3, column=1, columnspan=4)
+
+        self.canvas_nonogram.grid(row=4, column=0)
+        self.check_for_unicity_button.grid(row=5, column=0, columnspan=2)
+        self.nonogram_visualization_button.grid(row=5, column=3, columnspan=2)
 
     def load_image_button_pressed(self):
         self.openImageFile()
