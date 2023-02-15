@@ -41,8 +41,6 @@ class MainWindow:
             self.root, text="Image complète", variable=self.selectedChoice, value="NoEdgy")
         self.rbEdgy = tk.Radiobutton(
             self.root, text="Contours uniquement", variable=self.selectedChoice, value="Edgy")
-        self.rbNoEdgy.pack(anchor="w")
-        self.rbEdgy.pack(anchor="w")
 
         self.validation_button = tk.Button(
             text="Valider", command=self.validation_button_pressed)
