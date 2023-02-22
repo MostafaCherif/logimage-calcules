@@ -10,6 +10,7 @@ import solveur
 from threading import Thread, Event
 from nonogram import Nonogram
 from typing import Tuple
+import os
 
 
 def preprocess_image(
@@ -38,10 +39,17 @@ def preprocess_image(
 
     # Save output image
 
-    # TODO: check the existence of test folder and create it if necessary
-    # and delete it at the closure of the app
+    # TODO: delete the test folder at the closure of the app
 
     name = original_image_path[-4]
+
+    path = name + "/test"
+    # Check whether the specified path exists or not
+    isExist = os.path.exists(path)
+    if not isExist:
+    # Create a new directory because it does not exist
+        os.makedirs(path)
+
     filename = name + "/test/" + f'_{output_size[0]}x{output_size[1]}.jpg'
     res.save(filename)
 
