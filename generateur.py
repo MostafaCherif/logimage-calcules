@@ -4,6 +4,7 @@ from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 import solveur
 from threading import Thread, Event
 from typing import Tuple
+import os
 
 
 def ImgToLogimage(im):  # To rebuild, `im` is not used and `i_size` is undefined
@@ -134,7 +135,17 @@ def preprocess_image(
     res = img_PIL.resize(output_size, Image.BILINEAR)
 
     # Save output image
+
+    # TODO: delete the test folder at the closure of the app
+
     name = original_image_path[-4]
+
+    path = name + "/test"
+    # Check whether the specified path exists or not
+    isExist = os.path.exists(path)
+    if not isExist:
+        os.makedirs(path)
+
     filename = name + "/test/" + f'_{output_size[0]}x{output_size[1]}.jpg'
     res.save(filename)
 
@@ -169,6 +180,8 @@ if __name__ == "__main__":
 
     # open file
     img = Image.open(image)
+
+    if img.mode in ("RGBA", "P"): img = img.convert("RGB")
 
     # convert to small image
     res = img.resize(i_size, Image.BILINEAR)
