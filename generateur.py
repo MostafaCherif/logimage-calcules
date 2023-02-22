@@ -147,6 +147,7 @@ def preprocess_image(
         os.makedirs(path)
 
     filename = name + "/test/" + f'_{output_size[0]}x{output_size[1]}.jpg'
+    if res.mode in ("RGBA", "P"): res = res.convert("RGB")
     res.save(filename)
 
     enhancer = ImageEnhance.Contrast(res)
@@ -180,8 +181,6 @@ if __name__ == "__main__":
 
     # open file
     img = Image.open(image)
-
-    if img.mode in ("RGBA", "P"): img = img.convert("RGB")
 
     # convert to small image
     res = img.resize(i_size, Image.BILINEAR)
