@@ -7,6 +7,8 @@ import numpy as np
 from nonogramwindow import create_window
 import generateur
 import generateur_edgy
+from logimage_analysis import check_for_unique_solution_of_nonogram
+from exceptions import NullNonogramError, MultipleSolutionsError, TimeoutError
 
 
 class MainWindow:
@@ -98,31 +100,30 @@ class MainWindow:
         create_window(self.nonogram)
 
     def unicity_button_pressed(self):
-        if self.nonogram is None:
-            tk.messagebox.showerror(
-                "Logimage manquant", "Aucun logimage à analyser !",
-                parent=self.root)
-            return
-
         try:
-            one_solution = self.nonogram.solve()
+            one_solution = check_for_unique_solution_of_nonogram(
+                self.nonogram, raise_errors=True)
+            if one_solution is None:
+                messagebox.showerror(
+                    "Analyse de logimage", "Erreur lors de l'analyse du logimage",
+                    parent=self.root)
             if one_solution:
                 messagebox.showinfo(
                     "Analyse de logimage", "Le logimage admet bien une unique solution !",
                     parent=self.root)
-            else:
-                messagebox.showwarning(
-                    "Analyse de logimage", "Le logimage admet plusieurs solutions :(",
-                    parent=self.root)
 
-        except Exception as e:
-            if "timeout" in str(e):
-                messagebox.showwarning(
-                    "Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(",
-                    parent=self.root)
-            else:
-                print("Exception:")
-                print(e)
+        except NullNonogramError:
+            messagebox.showerror(
+                "Logimage manquant", "Aucun logimage à analyser !",
+                parent=self.root)
+        except MultipleSolutionsError:
+            messagebox.showwarning(
+                "Analyse de logimage", "Le logimage admet plusieurs solutions :(",
+                parent=self.root)
+        except TimeoutError:
+            messagebox.showwarning(
+                "Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(",
+                parent=self.root)
 
     def openImageFile(self):
         self.imPath = filedialog.askopenfilename(initialdir=".", title="Open an image", filetypes=(
@@ -145,7 +146,7 @@ class MainWindow:
                 canvas.create_rectangle(
                     i * 200/self.columns_count, j * 200/self.lines_count, (i + 1) * 200/self.columns_count, (j + 1) * 200/self.lines_count, fill="#fff")
 
-    def board_from_image(self, path: str, threshold: int=None):
+    def board_from_image(self, path: str, threshold: int = None):
         if threshold is None:
             threshold = self.slider.get()
         preprocessed_img = None
