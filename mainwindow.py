@@ -7,7 +7,7 @@ import numpy as np
 from nonogramwindow import create_window
 import generateur
 import generateur_edgy
-from logimage_analysis import check_for_unique_solution_of_nonogram
+from nonogram_analysis import check_for_unique_solution_of_nonogram
 from exceptions import NullNonogramError, MultipleSolutionsError, TimeoutError
 
 
