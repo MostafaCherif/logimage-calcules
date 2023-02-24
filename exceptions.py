@@ -11,3 +11,8 @@ class NullNonogramError(Exception):
 class MultipleSolutionsError(Exception):
     """Raised when trying to solve a `Nonogram` that has multiple solutions."""
     pass
+
+
+class TimeoutError(Exception):
+    """Raised when encountering a timeout while solving a `Nonogram`."""
+    pass
