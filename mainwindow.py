@@ -145,14 +145,16 @@ class MainWindow:
                 canvas.create_rectangle(
                     i * 200/self.columns_count, j * 200/self.lines_count, (i + 1) * 200/self.columns_count, (j + 1) * 200/self.lines_count, fill="#fff")
 
-    def board_from_image(self, path: str):
+    def board_from_image(self, path: str, threshold: int=None):
+        if threshold is None:
+            threshold = self.slider.get()
         preprocessed_img = None
         if self.selectedChoice.get() == "NoEdgy":
             preprocessed_img = generateur.preprocess_image(
-                path, threshold=self.slider.get(), output_size=(self.columns_count, self.lines_count))
+                path, threshold=threshold, output_size=(self.columns_count, self.lines_count))
         elif self.selectedChoice.get() == "Edgy":
             preprocessed_img = generateur_edgy.preprocess_image(
-                path, threshold=self.slider.get(), output_size=(self.columns_count, self.lines_count))
+                path, threshold=threshold, output_size=(self.columns_count, self.lines_count))
         return Board(data=preprocessed_img)
 
     def draw_lines(self):
