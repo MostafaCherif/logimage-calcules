@@ -125,6 +125,16 @@ class MainWindow:
                 "Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(",
                 parent=self.root)
 
+    def suggest_threshold_values(self):
+        # Goal: starting from the current threshold, try the thresholds that are close to see if a solvable logimage can be found.
+        threshold = self.get_threshold()
+        for gap_to_current_threshold in range(1, 6):
+            for direction in [-1, 1]:
+                new_threshold = threshold + gap_to_current_threshold * direction
+                if new_threshold < 0 or new_threshold > 255:
+                    continue
+                # TODO
+
     def openImageFile(self):
         self.imPath = filedialog.askopenfilename(initialdir=".", title="Open an image", filetypes=(
             ("Image file", "*.png"), ("Image file", "*.jpeg"), ("Image file", "*.jpg"), ("All File Types", "*.*")))
@@ -172,6 +182,12 @@ class MainWindow:
                 0,
                 column_number * 200/self.columns_count,
                 200)
+
+    def get_threshold(self):
+        """
+        Returns the current threshold value set by the user.
+        """
+        return self.slider.get()
 
     def show(self):
         self.pack_widgets()
