@@ -120,20 +120,36 @@ class MainWindow:
             messagebox.showwarning(
                 "Analyse de logimage", "Le logimage admet plusieurs solutions :(",
                 parent=self.root)
+            self.suggest_threshold_values()
         except TimeoutError:
             messagebox.showwarning(
                 "Analyse de logimage", "Le logimage admet plusieurs solutions ou alors l'analyse prend du temps :(",
                 parent=self.root)
+            self.suggest_threshold_values()
 
     def suggest_threshold_values(self):
         # Goal: starting from the current threshold, try the thresholds that are close to see if a solvable logimage can be found.
         threshold = self.get_threshold()
-        for gap_to_current_threshold in range(1, 6):
+        for gap_to_current_threshold in [1, 3, 5, 10, 20]:
             for direction in [-1, 1]:
                 new_threshold = threshold + gap_to_current_threshold * direction
                 if new_threshold < 0 or new_threshold > 255:
                     continue
-                # TODO
+
+                print(
+                    f"Trying to solve the nonogram with threshold value {new_threshold}")
+
+                board_with_new_threshold = self.board_from_image(
+                    self.imPath, new_threshold)
+                nonogram_with_new_threshold = board_to_nonogram(
+                    board_with_new_threshold)
+                if check_for_unique_solution_of_nonogram(nonogram_with_new_threshold, raise_errors=False):
+                    messagebox.showinfo(
+                        "Analyse de logimage", f"Un seuil de {new_threshold} permettrait d'avoir une unique solution.")
+                    return
+
+        messagebox.showerror("Analyse de logimage",
+                             "La recherche de seuil n'a pas donné de résultat.")
 
     def openImageFile(self):
         self.imPath = filedialog.askopenfilename(initialdir=".", title="Open an image", filetypes=(
