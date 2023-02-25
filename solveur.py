@@ -40,12 +40,12 @@ def timeout(timeout):
 class NonogramSolver:
     @timeout(10)
     def __init__(self, ROWS_VALUES, COLS_VALUES, savepath):
-        self.ROWS_VALUES = ROWS_VALUES
+        self.ROWS_VALUES = ROWS_VALUES.copy()
         self.no_of_rows = len(ROWS_VALUES)
         self.rows_changed = [0] * self.no_of_rows
         self.rows_done = [0] * self.no_of_rows
 
-        self.COLS_VALUES = COLS_VALUES
+        self.COLS_VALUES = COLS_VALUES.copy()
         self.no_of_cols = len(COLS_VALUES)
         self.cols_changed = [0] * self.no_of_cols
         self.cols_done = [0] * self.no_of_cols
