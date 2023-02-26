@@ -32,11 +32,12 @@ class MainWindow:
             text="Entrez le nombre de colonnes du logimage :")
         self.entry_columns = tk.Entry(self.root, width=2)
         self.entry_columns.insert(0, "5")
+        self.threshold_label = tk.Label(text="Seuil noir/blanc :")
         self.slider = tk.Scale(
             from_=0,
             to=255,
             tickinterval=32,
-            length=250,
+            length=400,
             orient="horizontal")
         self.selectedChoice = tk.StringVar(None, value=" ")
         self.rbNoEdgy = tk.Radiobutton(
@@ -68,7 +69,8 @@ class MainWindow:
         self.entry_lines.grid(row=1, column=2, sticky="W")
         self.label_entry_vertical.grid(row=1, column=3, sticky="E")
         self.entry_columns.grid(row=1, column=4, sticky="W")
-        self.slider.grid(row=2, column=1, columnspan=4)
+        self.threshold_label.grid(row=2, column=1, sticky="E")
+        self.slider.grid(row=2, column=2, columnspan=3, sticky="W")
         self.validation_button.grid(
             row=3, column=1, columnspan=4, ipadx=5, ipady=5)
 
