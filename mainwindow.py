@@ -129,6 +129,11 @@ class MainWindow:
 
     def suggest_threshold_values(self):
         # Goal: starting from the current threshold, try the thresholds that are close to see if a solvable logimage can be found.
+        user_agrees = messagebox.askquestion(
+            "Analyse de logimage", "Souhaitez-vous utiliser la recherche intelligente de seuil pour obtenir un logimage à une solution ?")
+        if user_agrees == "no":
+            return
+
         threshold = self.get_threshold()
         for gap_to_current_threshold in [1, 3, 5, 10, 20]:
             for direction in [-1, 1]:
